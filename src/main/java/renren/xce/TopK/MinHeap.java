@@ -1,6 +1,5 @@
 package renren.xce.TopK;
 
-
 /**
  * Min-Heap implementation.
  *
@@ -15,14 +14,24 @@ public class MinHeap
      */
     private int heapSize_;
 
-    public MinHeap(long[] array) {
+    /**
+     * Construct MinHeap.
+     * @param array
+     * @throws MinHeapException 
+     */
+    public MinHeap(long[] array) throws MinHeapException {
         init(array);
     }
     /**
      * Initialize minHeap. Put elements into its array; Set heapSize.
      * @param array  using array to initialize internal array_(deep copy).
+     * @throws MinHeapException 
      */
-    public void init(long[] array) {
+    public void init(long[] array) throws MinHeapException {                
+        if (array == null ||
+                array.length == 0) {
+            throw new MinHeapException("Invalid MinHeap");
+        }
         this.array_ = new long[array.length];
         // deep copy array.
         for (int i = 0; i < array.length; ++i) {
@@ -46,7 +55,7 @@ public class MinHeap
      * Maintains the min-heap property of heap rooted at index.
      * Assumption: sub-heap rooted at left and right child of index
      * is all min-heap, but not the heap rooted at index.
-     * @param index
+     * @param index the root of heap that need to maintain heap property.
      */
     public void maintainHeapProperty(int index) {
         if (index >= this.heapSize_) {
@@ -64,9 +73,10 @@ public class MinHeap
             least = right;
         }
         if (least != index) {
-            long temp = array_[index];
-            array_[index] = array_[least];
-            array_[least] = temp;
+//            long temp = array_[index];
+//            array_[index] = array_[least];
+//            array_[least] = temp;
+            exchange(index, least);
             maintainHeapProperty(least);
         }
     }
@@ -80,18 +90,16 @@ public class MinHeap
     public void sort() {
         buildHeap();
         for (int i = array_.length -1; i >= 1; --i) {
-            long temp = array_[0];
-            array_[0] = array_[i];
-            array_[i] = temp;
+//            long temp = array_[0];
+//            array_[0] = array_[i];
+//            array_[i] = temp;
+            exchange(0, i);
             --heapSize_;
-            maintainHeapProperty(0);      
+            maintainHeapProperty(0);
         }
     }
 
     public long min() {
-        // if array_ is null
-        // or array_ is empty
-        // what should i do?
         return array_[0];
     }
 
@@ -99,6 +107,16 @@ public class MinHeap
         array_[0] = l;
     }
 
+    void exchange(int i, int j) {
+        if (i >= array_.length ||
+                j >= array_.length) {
+            return;
+        }
+        long temp = array_[i];
+        array_[i] = array_[j];
+        array_[j] = temp;
+    }
+    
     static int parentIndex(int i) {
         return (i - 1) / 2;
     }
@@ -109,5 +127,13 @@ public class MinHeap
 
     static int rightChildIndex(int i) {
         return (i + 1) * 2;
+    }
+    
+    public class MinHeapException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public MinHeapException(String msg) {
+            super(msg);
+        }
     }
 }
