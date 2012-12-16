@@ -1,5 +1,6 @@
-package renren.xce.HeapSort;
+package renren.xce.TopK;
 
+import renren.xce.TopK.MinHeap;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
